@@ -1,0 +1,19 @@
+name: prebuild
+
+on: push
+
+jobs:
+  prebuild:
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+    name: Prebuild on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm install --ignore-scripts
+      - run: npx --no-install prebuild -r electron -t 14.0.0 --include-regex 'better_sqlite3.node$' -u ${{ secrets.GITHUB_TOKEN }}
